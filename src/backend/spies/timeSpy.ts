@@ -146,14 +146,14 @@ export class TimeSpy {
     }
 
     private getCallback(self: TimeSpy, callback: any, skippedCalback: () => void = null): Function {
-        return function () {
+        return async function () {
             const now = Time.now;
 
             self.lastFrame = ++self.lastFrame % self.speedRatio;
             if (self.willPlayNextFrame || (self.speedRatio && !self.lastFrame)) {
                 self.onFrameStart.trigger(self);
                 try {
-                    callback.apply(self.spiedScope, arguments);
+                    await callback.apply(self.spiedScope, arguments);
                 }
                 catch (e) {
                     self.onError.trigger(e);
